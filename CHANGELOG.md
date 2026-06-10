@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.2.1 - 2026-06-10
+- Replace installer yes/no chains with a volume-key selector UI (`Vol+` next, `Vol-` select)
+- Improve install flow for preset selection, Wi-Fi region selection, telephony spoof selection, and optional add-ons
+- Refresh README requirements and experimental notes for this fork, including Pixel 5 testing context
+
 ## v1.2.0 - 2026-06-10
 - Fork metadata now points to `latifangren/Pixel-Regional-Restrictions-Disabler`
 - Add install presets: `Wi-Fi only`, `Wi-Fi + telephony`, `Full unlock`
