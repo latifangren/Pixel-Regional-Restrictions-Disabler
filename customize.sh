@@ -1,9 +1,9 @@
 chooseport() {
   while true; do
     local event=$(/system/bin/getevent -lc 1 2>&1)
-    if echo "$event" | grep -q "KEY_VOLUMEUP"; then
+    if echo "$event" | grep -q "KEY_VOLUMEUP[[:space:]]*DOWN"; then
       return 0
-    elif echo "$event" | grep -q "KEY_VOLUMEDOWN"; then
+    elif echo "$event" | grep -q "KEY_VOLUMEDOWN[[:space:]]*DOWN"; then
       return 1
     fi
   done
