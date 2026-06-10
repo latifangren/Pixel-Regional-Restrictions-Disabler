@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.2.0 - 2026-06-10
+- Fork metadata now points to `latifangren/Pixel-Regional-Restrictions-Disabler`
+- Add install presets: `Wi-Fi only`, `Wi-Fi + telephony`, `Full unlock`
+- Add selectable Wi-Fi spoof region during install
+- Add optional telephony spoof toggle and selectable telephony region
+- Default Wi-Fi spoof region changed to `AU`
+- Add extra Wi-Fi 6 GHz unlock props in `system.prop` and `service.sh`
+
 ## v1.1.2 - 2026-03-21
 - Add support for Writing Tools in Gboard
 

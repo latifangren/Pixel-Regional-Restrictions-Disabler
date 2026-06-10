@@ -1,7 +1,7 @@
-id=BypassRegionalPixel
-name=Pixel Regional Restrictions Disabler
-version=v1.1.2
-versionCode=112
-author=karina-lab
-description=Enables VoLTE, VoWiFi, 5G, UWB, all Wi-Fi hotspot options for Google Pixel in countries not officially supported by Google.
-updateJson=https://raw.githubusercontent.com/karina-lab/Pixel-Regional-Restrictions-Disabler/main/update.json
+id=BypassRegionalPixelLatif
+name=Pixel Regional Restrictions Disabler (Latif Fork)
+version=v1.2.0
+versionCode=120
+author=karina-lab, latifangren
+description=Fork with install presets, selectable Wi-Fi spoof region, optional telephony spoof region, and 6 GHz Wi-Fi unlock props.
+updateJson=https://raw.githubusercontent.com/latifangren/Pixel-Regional-Restrictions-Disabler/main/update.json
