@@ -25,69 +25,72 @@ ask_user() {
   fi
 }
 
-select_wifi_region() {
-  WIFI_REGION="AU"
+select_option() {
+  local TITLE="$1"
+  local DEFAULT_INDEX="$2"
+  shift 2
 
-  ui_print "- Configure Wi-Fi spoof region?"
-  ui_print "  Vol+ = Choose manually, Vol- = Use default (AU)"
-  if ! chooseport; then
-    ui_print "  Selected: AU"
-    sleep 0.5
-    ui_print " "
-    return 0
-  fi
+  local OPTIONS=("$@")
+  local COUNT=${#OPTIONS[@]}
+  local INDEX=$DEFAULT_INDEX
 
-  ui_print "- Select Wi-Fi spoof region"
-  ui_print "  Recommended for Indonesia: AU, GB, JP, DE, NL"
-  ui_print " "
+  while true; do
+    ui_print "- $TITLE"
+    ui_print "  Vol+ = Next option, Vol- = Select"
+    local i=0
+    while [ $i -lt $COUNT ]; do
+      if [ $i -eq $INDEX ]; then
+        ui_print "    > ${OPTIONS[$i]}"
+      else
+        ui_print "      ${OPTIONS[$i]}"
+      fi
+      i=$((i + 1))
+    done
 
-  for REGION in AU GB JP DE NL US CN ID; do
-    if ask_user "Use ${REGION} for Wi-Fi country spoof?"; then
-      WIFI_REGION="$REGION"
+    if chooseport; then
+      INDEX=$((INDEX + 1))
+      if [ $INDEX -ge $COUNT ]; then
+        INDEX=0
+      fi
+      ui_print " "
+    else
+      SELECTED_OPTION="${OPTIONS[$INDEX]}"
+      ui_print "  Selected: $SELECTED_OPTION"
+      sleep 0.5
+      ui_print " "
       return 0
     fi
   done
+}
 
-  ui_print "- No region explicitly selected. Falling back to AU."
-  ui_print " "
-  WIFI_REGION="AU"
+select_wifi_region() {
+  select_option \
+    "Select Wi-Fi spoof region (recommended for Indonesia: AU, GB, JP, DE, NL)" \
+    0 \
+    "AU" "GB" "JP" "DE" "NL" "US" "CN" "ID"
+  WIFI_REGION="$SELECTED_OPTION"
 }
 
 select_install_mode() {
-  INSTALL_MODE="wifi_only"
-  ENABLE_OPTIONAL_ADDONS="false"
+  select_option \
+    "Select install preset" \
+    0 \
+    "Wi-Fi only" "Wi-Fi + telephony" "Full unlock"
 
-  ui_print "- Select install preset"
-  ui_print "  Vol+ = Choose preset, Vol- = Use default (Wi-Fi only)"
-  if ! chooseport; then
-    ui_print "  Selected: Wi-Fi only"
-    sleep 0.5
-    ui_print " "
-    return 0
-  fi
-
-  if ask_user "Use Wi-Fi only preset?"; then
-    INSTALL_MODE="wifi_only"
-    ENABLE_OPTIONAL_ADDONS="false"
-    return 0
-  fi
-
-  if ask_user "Use Wi-Fi + telephony preset?"; then
-    INSTALL_MODE="wifi_telephony"
-    ENABLE_OPTIONAL_ADDONS="false"
-    return 0
-  fi
-
-  if ask_user "Use Full unlock preset?"; then
-    ui_print "- Selected: Full unlock"
-    ui_print " "
-    INSTALL_MODE="full_unlock"
-    ENABLE_OPTIONAL_ADDONS="true"
-    return 0
-  fi
-
-  ui_print "- No preset explicitly selected. Falling back to Wi-Fi only."
-  ui_print " "
+  case "$SELECTED_OPTION" in
+    "Wi-Fi only")
+      INSTALL_MODE="wifi_only"
+      ENABLE_OPTIONAL_ADDONS="false"
+      ;;
+    "Wi-Fi + telephony")
+      INSTALL_MODE="wifi_telephony"
+      ENABLE_OPTIONAL_ADDONS="false"
+      ;;
+    "Full unlock")
+      INSTALL_MODE="full_unlock"
+      ENABLE_OPTIONAL_ADDONS="true"
+      ;;
+  esac
 }
 
 select_telephony_region() {
@@ -103,32 +106,23 @@ select_telephony_region() {
   fi
 
   if [ "$INSTALL_MODE" = "full_unlock" ]; then
-    ui_print "- Enable telephony country spoof?"
-    ui_print "  Vol+ = Yes, Vol- = No"
-    if ! chooseport; then
-      ui_print "  Selected: No"
-      sleep 0.5
-      ui_print " "
+    select_option \
+      "Telephony spoof in Full unlock mode" \
+      1 \
+      "Enable telephony spoof" "Disable telephony spoof"
+
+    if [ "$SELECTED_OPTION" = "Disable telephony spoof" ]; then
       return 0
     fi
 
     TELEPHONY_SPOOF="true"
   fi
 
-  ui_print "- Select telephony spoof region"
-  ui_print "  Default recommendation: US"
-  ui_print " "
-
-  for REGION in US AU GB JP DE NL CN ID; do
-    if ask_user "Use ${REGION} for telephony country spoof?"; then
-      TELEPHONY_REGION="$REGION"
-      return 0
-    fi
-  done
-
-  ui_print "- No telephony region explicitly selected. Falling back to US."
-  ui_print " "
-  TELEPHONY_REGION="US"
+  select_option \
+    "Select telephony spoof region" \
+    0 \
+    "US" "AU" "GB" "JP" "DE" "NL" "CN" "ID"
+  TELEPHONY_REGION="$SELECTED_OPTION"
 }
 
 ui_print "**************************************"
@@ -209,7 +203,11 @@ esac
 if [ "$THERMO_SUPPORT" = "true" ] && [ "$ENABLE_OPTIONAL_ADDONS" = "true" ]; then
     APP_DATA="/data/data/com.google.android.apps.pixel.health"
     if [ -d "$APP_DATA" ]; then
-        if ask_user "Enable Body Temperature in Pixel Thermometer?"; then
+        select_option \
+          "Pixel Thermometer body temperature" \
+          1 \
+          "Enable" "Skip"
+        if [ "$SELECTED_OPTION" = "Enable" ]; then
             THERMO_DIR="$APP_DATA/shared_prefs"
             mkdir -p "$THERMO_DIR"
             unzip -o "$ZIPFILE" "thermometer/*" -d "$TMPDIR" >&2
@@ -242,7 +240,11 @@ fi
 
 APP_DATA_GBOARD="/data/data/com.google.android.inputmethod.latin"
 if [ "$ENABLE_OPTIONAL_ADDONS" = "true" ] && [ -d "$APP_DATA_GBOARD" ]; then
-    if ask_user "Enable AI features in Gboard?"; then
+    select_option \
+      "Gboard AI features" \
+      1 \
+      "Enable" "Skip"
+    if [ "$SELECTED_OPTION" = "Enable" ]; then
         GBOARD_DIR="$APP_DATA_GBOARD/files/datastore"
         mkdir -p "$GBOARD_DIR"
         unzip -o "$ZIPFILE" "gboard/*" -d "$TMPDIR" >&2
