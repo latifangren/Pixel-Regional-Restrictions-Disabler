@@ -1,7 +1,7 @@
 id=BypassRegionalPixelLatif
 name=Pixel Regional Restrictions Disabler (Latif Fork)
-version=v1.2.3
-versionCode=123
+version=v1.2.4
+versionCode=124
 author=karina-lab, latifangren
 description=Fork with install presets, selectable Wi-Fi spoof region, optional telephony spoof region, and 6 GHz Wi-Fi unlock props.
 updateJson=https://raw.githubusercontent.com/latifangren/Pixel-Regional-Restrictions-Disabler/main/update.json
