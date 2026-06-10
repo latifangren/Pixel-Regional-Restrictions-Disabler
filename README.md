@@ -38,7 +38,10 @@ In countries [not officially supported](https://pixel.withgoogle.com/5G/) by Goo
 - Optional telephony spoof with separate region selection:
   - `US`, `AU`, `GB`, `JP`, `DE`, `NL`, `CN`, `ID`
 - Default Wi-Fi spoof region changed to `AU`
-- Extra 6 GHz Wi-Fi unlock props applied in both `system.prop` and `service.sh`
+
+### ⚠️ 6 GHz note
+
+Earlier fork experiments tried forcing extra 6 GHz-related props. That approach caused boot issues on at least one tested **Pixel 5 (`redfin`)** setup, so the current safe baseline keeps **Wi-Fi region spoofing** but does **not** force those extra 6 GHz props by default.
 
 ## ✅ Requirements
 
@@ -53,6 +56,7 @@ This fork may also be useful outside the upstream target matrix for Wi-Fi regula
 - **Experimentally tested on Google Pixel 5 (`redfin`)** for Wi-Fi regulatory spoofing use cases
 - If you use it on unsupported models such as Pixel 5, treat it as **experimental** and verify behavior yourself
 - Do **not** assume all upstream features work equally well on non-Tensor devices
+- On Pixel 5 testing, **Wi-Fi region spoofing worked**, but **forced extra 6 GHz props caused instability / boot issues** and are therefore not enabled in the current safe baseline
 
 ## 🚀 Installation
 
@@ -67,6 +71,12 @@ This fork may also be useful outside the upstream target matrix for Wi-Fi regula
 6. Reboot your phone.
 7. Enable VoLTE, VoWiFi, 5G, and UWB in device settings if applicable.
 8. You may need to toggle hotspot once after installation for new frequency options to appear.
+
+## 🆘 Rescue helper
+
+This repo also contains a small local rescue helper for edge cases where a bad module build causes boot trouble but Android still comes up long enough for authorized `adb` + temporary `su` access.
+
+- See: [`rescue/README.md`](rescue/README.md)
 
 ## 🏗️ Release workflow for this fork
 

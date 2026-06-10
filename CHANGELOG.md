@@ -3,6 +3,7 @@
 ## v1.2.4 - 2026-06-10
 - Disable fork-added 6 GHz force props in `service.sh` and `system.prop`
 - Keep region selector changes while moving runtime behavior closer to upstream-safe Wi-Fi spoofing
+- Confirmed as the safer baseline for at least one tested Pixel 5 (`redfin`) setup where forced 6 GHz props caused boot issues
 
 ## v1.2.3 - 2026-06-10
 - Fix double-trigger behavior in installer selector by reacting only to `DOWN` volume key events
