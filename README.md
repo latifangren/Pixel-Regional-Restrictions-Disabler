@@ -6,7 +6,7 @@
 
 
 
-# Pixel Regional Restrictions Disabler (Latif Fork)
+# 📶 Pixel Regional Restrictions Disabler (Latif Fork)
 
 A Magisk Module to enable VoLTE, VoWiFi, 5G, UWB, 5/6 GHz hotspot, Wi-Fi repeater, Body Temperature and Writing Tools for Google Pixel in countries not officially supported by Google.
 
@@ -14,7 +14,7 @@ This is an all-in-one mod for convenience.
 
 This fork adds installer presets, selectable Wi-Fi spoof regions, optional telephony spoofing, and fork-owned update/release metadata so Magisk and KernelSU do not point back to the upstream project.
 
-## Features
+## ✨ Features
 
 In countries [not officially supported](https://pixel.withgoogle.com/5G/) by Google, this module enables and gives you:
 
@@ -27,7 +27,7 @@ In countries [not officially supported](https://pixel.withgoogle.com/5G/) by Goo
 - Body Temperature in Pixel Thermometer (Pro models of 8-10 series only)
 - Writing Tools in Gboard
 
-### Fork additions
+### 🛠️ Fork additions
 
 - Install preset selection:
   - `Wi-Fi only`
@@ -40,17 +40,21 @@ In countries [not officially supported](https://pixel.withgoogle.com/5G/) by Goo
 - Default Wi-Fi spoof region changed to `AU`
 - Extra 6 GHz Wi-Fi unlock props applied in both `system.prop` and `service.sh`
 
-## Requirements
+## ✅ Requirements
 
-- Google Pixel 6 or higher (Google Tensor SoC)
-- Rooted with Magisk / KernelSU / Apatch
-- A brain
+- Upstream target: **Google Pixel 6 or higher** (**Google Tensor SoC**)
+- Root access with **Magisk**, **KernelSU**, or **Apatch**
+- Basic understanding of what this module changes
 
-### Experimental note for this fork
+### 🧪 Experimental note for this fork
 
-This fork may also be useful outside the upstream target matrix for Wi-Fi regulatory spoofing experiments. If you use it on unsupported models such as Pixel 5, treat it as experimental and verify behavior yourself.
+This fork may also be useful outside the upstream target matrix for Wi-Fi regulatory spoofing experiments.
 
-## Installation
+- **Experimentally tested on Google Pixel 5 (`redfin`)** for Wi-Fi regulatory spoofing use cases
+- If you use it on unsupported models such as Pixel 5, treat it as **experimental** and verify behavior yourself
+- Do **not** assume all upstream features work equally well on non-Tensor devices
+
+## 🚀 Installation
 
 1. Download the zip from this fork's [release page](https://github.com/latifangren/Pixel-Regional-Restrictions-Disabler/releases).
 2. Flash it using Magisk, KernelSU, or Apatch.
@@ -64,7 +68,7 @@ This fork may also be useful outside the upstream target matrix for Wi-Fi regula
 7. Enable VoLTE, VoWiFi, 5G, and UWB in device settings if applicable.
 8. You may need to toggle hotspot once after installation for new frequency options to appear.
 
-## Release workflow for this fork
+## 🏗️ Release workflow for this fork
 
 This fork includes a GitHub Actions release workflow that:
 
@@ -88,7 +92,7 @@ Manual release flow:
 3. Enter the tag name, for example `v1.2.0`
 4. Run the workflow to rebuild and attach the ZIP for that tag
 
-## See also
+## 🔗 See also
 
 - [Pixel Modem Fix](https://github.com/vchikalkin/Pixel-Modem-Fix) for better signal quality.
 
@@ -98,11 +102,11 @@ Manual release flow:
 
 - [Battery Info Enabler](https://github.com/klab7/BatteryInfoEnabler) for unlocking battery info in settings on all Pixels.
 
-## License
+## 📄 License
 
 This project is licensed under the [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.en.html) license.
 
-## Credits
+## 🙌 Credits
 
 - [esteban](https://github.com/EstebanForge/Pixel-VoLTE-VoWIFI-5G-Enabler) for original VoLTE, VoWiFi & 5G enabler module.
 
