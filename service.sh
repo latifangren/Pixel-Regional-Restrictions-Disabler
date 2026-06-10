@@ -17,8 +17,6 @@
     if command -v resetprop >/dev/null 2>&1; then
         resetprop ro.boot.wificountrycode "$WIFI_REGION"
         resetprop wifi.country "$WIFI_REGION"
-        resetprop ro.wifi.6ghz.enabled true
-        resetprop config.disable_wifi_6ghz false
     fi
 
     if [ "$TELEPHONY_SPOOF" = "true" ]; then
