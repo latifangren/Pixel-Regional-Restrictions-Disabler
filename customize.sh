@@ -25,12 +25,140 @@ ask_user() {
   fi
 }
 
+select_wifi_region() {
+  WIFI_REGION="AU"
+
+  ui_print "- Configure Wi-Fi spoof region?"
+  ui_print "  Vol+ = Choose manually, Vol- = Use default (AU)"
+  if ! chooseport; then
+    ui_print "  Selected: AU"
+    sleep 0.5
+    ui_print " "
+    return 0
+  fi
+
+  ui_print "- Select Wi-Fi spoof region"
+  ui_print "  Recommended for Indonesia: AU, GB, JP, DE, NL"
+  ui_print " "
+
+  for REGION in AU GB JP DE NL US CN ID; do
+    if ask_user "Use ${REGION} for Wi-Fi country spoof?"; then
+      WIFI_REGION="$REGION"
+      return 0
+    fi
+  done
+
+  ui_print "- No region explicitly selected. Falling back to AU."
+  ui_print " "
+  WIFI_REGION="AU"
+}
+
+select_install_mode() {
+  INSTALL_MODE="wifi_only"
+  ENABLE_OPTIONAL_ADDONS="false"
+
+  ui_print "- Select install preset"
+  ui_print "  Vol+ = Choose preset, Vol- = Use default (Wi-Fi only)"
+  if ! chooseport; then
+    ui_print "  Selected: Wi-Fi only"
+    sleep 0.5
+    ui_print " "
+    return 0
+  fi
+
+  if ask_user "Use Wi-Fi only preset?"; then
+    INSTALL_MODE="wifi_only"
+    ENABLE_OPTIONAL_ADDONS="false"
+    return 0
+  fi
+
+  if ask_user "Use Wi-Fi + telephony preset?"; then
+    INSTALL_MODE="wifi_telephony"
+    ENABLE_OPTIONAL_ADDONS="false"
+    return 0
+  fi
+
+  if ask_user "Use Full unlock preset?"; then
+    ui_print "- Selected: Full unlock"
+    ui_print " "
+    INSTALL_MODE="full_unlock"
+    ENABLE_OPTIONAL_ADDONS="true"
+    return 0
+  fi
+
+  ui_print "- No preset explicitly selected. Falling back to Wi-Fi only."
+  ui_print " "
+}
+
+select_telephony_region() {
+  TELEPHONY_SPOOF="false"
+  TELEPHONY_REGION="US"
+
+  if [ "$INSTALL_MODE" = "wifi_only" ]; then
+    return 0
+  fi
+
+  if [ "$INSTALL_MODE" = "wifi_telephony" ]; then
+    TELEPHONY_SPOOF="true"
+  fi
+
+  if [ "$INSTALL_MODE" = "full_unlock" ]; then
+    ui_print "- Enable telephony country spoof?"
+    ui_print "  Vol+ = Yes, Vol- = No"
+    if ! chooseport; then
+      ui_print "  Selected: No"
+      sleep 0.5
+      ui_print " "
+      return 0
+    fi
+
+    TELEPHONY_SPOOF="true"
+  fi
+
+  ui_print "- Select telephony spoof region"
+  ui_print "  Default recommendation: US"
+  ui_print " "
+
+  for REGION in US AU GB JP DE NL CN ID; do
+    if ask_user "Use ${REGION} for telephony country spoof?"; then
+      TELEPHONY_REGION="$REGION"
+      return 0
+    fi
+  done
+
+  ui_print "- No telephony region explicitly selected. Falling back to US."
+  ui_print " "
+  TELEPHONY_REGION="US"
+}
+
 ui_print "**************************************"
 ui_print " Pixel Regional Restrictions Disabler "
 ui_print "**************************************"
 
 DEVICE_MODEL=$(getprop ro.product.device)
 ui_print "- Device: $DEVICE_MODEL"
+ui_print " "
+
+select_install_mode
+select_wifi_region
+select_telephony_region
+
+cat > "$MODPATH/region.conf" <<EOF
+INSTALL_MODE=$INSTALL_MODE
+WIFI_REGION=$WIFI_REGION
+TELEPHONY_SPOOF=$TELEPHONY_SPOOF
+TELEPHONY_REGION=$TELEPHONY_REGION
+EOF
+
+chmod 0644 "$MODPATH/region.conf"
+
+ui_print "- Install preset: $INSTALL_MODE"
+ui_print "- Wi-Fi spoof region set to: $WIFI_REGION"
+if [ "$TELEPHONY_SPOOF" = "true" ]; then
+  ui_print "- Telephony spoof region set to: $TELEPHONY_REGION"
+else
+  ui_print "- Telephony spoof disabled"
+fi
 ui_print " "
 
 case "$DEVICE_MODEL" in
@@ -78,7 +206,7 @@ case "$DEVICE_MODEL" in
 		THERMO_SUPPORT="false";;
 esac
 
-if [ "$THERMO_SUPPORT" = "true" ]; then
+if [ "$THERMO_SUPPORT" = "true" ] && [ "$ENABLE_OPTIONAL_ADDONS" = "true" ]; then
     APP_DATA="/data/data/com.google.android.apps.pixel.health"
     if [ -d "$APP_DATA" ]; then
         if ask_user "Enable Body Temperature in Pixel Thermometer?"; then
@@ -113,7 +241,7 @@ if [ "$THERMO_SUPPORT" = "true" ]; then
 fi
 
 APP_DATA_GBOARD="/data/data/com.google.android.inputmethod.latin"
-if [ -d "$APP_DATA_GBOARD" ]; then
+if [ "$ENABLE_OPTIONAL_ADDONS" = "true" ] && [ -d "$APP_DATA_GBOARD" ]; then
     if ask_user "Enable AI features in Gboard?"; then
         GBOARD_DIR="$APP_DATA_GBOARD/files/datastore"
         mkdir -p "$GBOARD_DIR"
