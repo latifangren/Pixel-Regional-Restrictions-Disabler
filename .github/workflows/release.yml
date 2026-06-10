@@ -1,0 +1,47 @@
+name: Release module zip
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "Existing tag to release (for example: v1.2.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag_name || github.ref }}
+
+      - name: Build flashable zip
+        shell: bash
+        run: |
+          mkdir -p dist
+          zip -r dist/Pixel-Regional-Restrictions-Disabler-latifangren.zip . \
+            -x ".git/*" \
+            -x ".github/*" \
+            -x "dist/*"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Pixel-Regional-Restrictions-Disabler-latifangren
+          path: dist/Pixel-Regional-Restrictions-Disabler-latifangren.zip
+
+      - name: Create or update GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && inputs.tag_name || github.ref_name }}
+          files: dist/Pixel-Regional-Restrictions-Disabler-latifangren.zip
+          generate_release_notes: true
