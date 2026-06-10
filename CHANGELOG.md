@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.2.2 - 2026-06-10
+- Fix installer selector shell compatibility for KernelSU Legacy and other stricter installer shells
+- Replace Bash-style array usage in `customize.sh` with shell-compatible positional argument handling
+
 ## v1.2.1 - 2026-06-10
 - Replace installer yes/no chains with a volume-key selector UI (`Vol+` next, `Vol-` select)
 - Improve install flow for preset selection, Wi-Fi region selection, telephony spoof selection, and optional add-ons

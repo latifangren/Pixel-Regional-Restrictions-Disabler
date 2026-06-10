@@ -30,8 +30,7 @@ select_option() {
   local DEFAULT_INDEX="$2"
   shift 2
 
-  local OPTIONS=("$@")
-  local COUNT=${#OPTIONS[@]}
+  local COUNT=$#
   local INDEX=$DEFAULT_INDEX
 
   while true; do
@@ -39,10 +38,13 @@ select_option() {
     ui_print "  Vol+ = Next option, Vol- = Select"
     local i=0
     while [ $i -lt $COUNT ]; do
+      local POS=$((i + 1))
+      local OPTION
+      eval OPTION="\${$POS}"
       if [ $i -eq $INDEX ]; then
-        ui_print "    > ${OPTIONS[$i]}"
+        ui_print "    > $OPTION"
       else
-        ui_print "      ${OPTIONS[$i]}"
+        ui_print "      $OPTION"
       fi
       i=$((i + 1))
     done
@@ -54,7 +56,8 @@ select_option() {
       fi
       ui_print " "
     else
-      SELECTED_OPTION="${OPTIONS[$INDEX]}"
+      local POS=$((INDEX + 1))
+      eval SELECTED_OPTION="\${$POS}"
       ui_print "  Selected: $SELECTED_OPTION"
       sleep 0.5
       ui_print " "
