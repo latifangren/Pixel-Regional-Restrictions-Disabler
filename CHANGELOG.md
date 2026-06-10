@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.2.3 - 2026-06-10
+- Fix double-trigger behavior in installer selector by reacting only to `DOWN` volume key events
+- Prevent one physical volume key press from being interpreted as both press and release navigation
+
 ## v1.2.2 - 2026-06-10
 - Fix installer selector shell compatibility for KernelSU Legacy and other stricter installer shells
 - Replace Bash-style array usage in `customize.sh` with shell-compatible positional argument handling
